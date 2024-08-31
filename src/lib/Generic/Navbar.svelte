@@ -1,0 +1,38 @@
+<script lang="ts">
+	import Button from './Button.svelte';
+
+	export let title: string = '';
+	export let handleBack: (() => void) | null = null;
+	export let handleNext: (() => void) | null = null;
+</script>
+
+<div class="nav-container">
+	<Button size="m" on:click={handleBack} disabled={handleBack === null}>Back</Button>
+
+	<h1>{title}</h1>
+
+	<Button size="m" on:click={handleNext} disabled={handleNext === null}>Next</Button>
+</div>
+
+<style>
+	* {
+		box-sizing: border-box;
+	}
+	.nav-container {
+		width: 100%;
+		height: 34px;
+		background: #eee;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		overflow: hidden;
+		padding: 0px 4px;
+	}
+	h1 {
+		margin: 0;
+		height: max-content;
+		font-size: medium;
+		user-select: none;
+		font-family: 'Figtree';
+	}
+</style>

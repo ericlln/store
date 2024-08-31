@@ -1,0 +1,7 @@
+@font-face {
+	font-family: 'Figtree';
+	font-style: normal;
+	src:
+		local(''),
+		url('/src/fonts/Figtree-Regular.ttf') format('truetype');
+}
