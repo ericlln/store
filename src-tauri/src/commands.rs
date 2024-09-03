@@ -1,6 +1,19 @@
+use std::path::Path;
 use rusqlite::Connection;
+use crate::{db::create_tables, models::Space};
 
-use crate::models::{Item, Space};
+#[tauri::command]
+pub fn create_store(name: &str, path: &str) -> Result<bool, String> {
+    let db_path = Path::new(path).join(format!("{}.db", name));
+    let conn = Connection::open(db_path).map_err(|e| e.to_string())?;
+    
+    if let Err(e) = create_tables(&conn) {
+        eprintln!("Error creating tables: {}", e);
+        return Err(e.to_string());
+    }
+    
+    Ok(true)
+}
 
 #[tauri::command]
 pub fn new_space(name: &str, drawing: Vec<Vec<(f32, f32)>>) -> Result<i64, String> {

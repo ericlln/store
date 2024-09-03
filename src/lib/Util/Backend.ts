@@ -3,6 +3,15 @@ import type { Item, Store } from './Models';
 import { invoke } from '@tauri-apps/api';
 
 export class Backend {
+	public static async CreateStore(name: string, path: string): Promise<boolean> {
+		try {
+			return await invoke('create_store', { name, path });
+		} catch (err: unknown) {
+			console.error('Failed to create store: ', err);
+			return false;
+		}
+	}
+
 	public static async GetDrawing(): Promise<Point[][]> {
 		try {
 			const coordArray: number[][][] = await invoke('send_drawing');
@@ -24,22 +33,23 @@ export class Backend {
 			await invoke('receive_drawing', { shapes });
 		} catch (error) {
 			console.error('Failed to send shapes: ', error);
-		}
-	}
-
-	public static async CreateStore(name: string, location: Point): Promise<boolean> {
-		try {
-			return await invoke('create_store', {
-				name: name,
-				spaceId: 1,
-				x: location.x,
-				y: location.y
-			});
-		} catch (err: unknown) {
-			console.error('Failed to create store: ', err);
 			return false;
 		}
 	}
+
+	// public static async CreateStore(name: string, location: Point): Promise<boolean> {
+	// 	try {
+	// 		return await invoke('create_store', {
+	// 			name: name,
+	// 			spaceId: 1,
+	// 			x: location.x,
+	// 			y: location.y
+	// 		});
+	// 	} catch (err: unknown) {
+	// 		console.error('Failed to create store: ', err);
+	// 		return false;
+	// 	}
+	// }
 
 	public static async FetchStore(id: number): Promise<Store | null> {
 		try {

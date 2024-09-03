@@ -17,8 +17,8 @@
 <div class="layout-wrapper">
 	<div class="main-content">
 		<div class="inputs-list">
-			<Input bind:value={name} label="Name" placeholder="A name for your store" />
-			<Input bind:value={tags} label="Tags" placeholder="Associated with each item in this store" />
+			<Input bind:value={name} placeholder="A name for your store" />
+			<Input bind:value={tags} placeholder="Associated with each item in this store" />
 		</div>
 
 		<div class="item-list">

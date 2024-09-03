@@ -2,16 +2,22 @@
 	import Button from './Button.svelte';
 
 	export let title: string = '';
+	export let backLabel: string = 'Back';
+	export let nextLabel: string = 'Next';
 	export let handleBack: (() => void) | null = null;
 	export let handleNext: (() => void) | null = null;
 </script>
 
 <div class="nav-container">
-	<Button size="m" on:click={handleBack} disabled={handleBack === null}>Back</Button>
+	{#if handleBack}
+		<Button size="m" on:click={handleBack} disabled={handleBack === null}>{backLabel}</Button>
+	{/if}
 
 	<h1>{title}</h1>
 
-	<Button size="m" on:click={handleNext} disabled={handleNext === null}>Next</Button>
+	{#if handleNext}
+		<Button size="m" on:click={handleNext} disabled={handleNext === null}>{nextLabel}</Button>
+	{/if}
 </div>
 
 <style>

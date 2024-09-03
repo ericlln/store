@@ -32,7 +32,7 @@
 		);
 	};
 
-	const onMouseLeave = (evt: MouseEvent) => {
+	const onMouseLeave = () => {
 		if (!popupText) return;
 		popupManager.removePopup('buttonPopup');
 	};
@@ -73,12 +73,12 @@
 
 	.btn.m {
 		padding: 6px;
-		font-size: 16px;
+		font-size: 14px;
 	}
 
 	.btn.l {
-		padding: 8px;
-		font-size: 22px;
+		padding: 8px 16px;
+		font-size: 16px;
 	}
 
 	.btn.xl {

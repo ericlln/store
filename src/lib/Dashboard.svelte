@@ -14,7 +14,7 @@
 				size="xl"
 				type="icon"
 				on:click={() => {
-					goto('/setup/shaping');
+					goto('/setup');
 				}}
 			>
 				<Icon

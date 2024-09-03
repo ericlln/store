@@ -24,6 +24,9 @@
 				"unminimize": true,
 				"startDragging": true,
 				"setMinSize": true
+			},
+			"dialog": {
+				"open": true
 			}
 		},
 		"bundle": {
