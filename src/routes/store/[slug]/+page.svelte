@@ -1,20 +1,22 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import type { Store } from '$lib/Mapper/Store';
-	import StoreEditor from '$lib/Store/StoreEditor.svelte';
 	import { Backend } from '$lib/Util/Backend';
 	import { onMount } from 'svelte';
 
-	const id = parseInt($page.params.slug);
-	let store: Store | null = null;
+	let hasStore = false;
+
+	const name = $page.params.slug;
+	// let spaceCnt: number | null = null;
+	// let binCnt: number | null = null;
+	// let itemCnt: number | null = null;
 
 	onMount(async () => {
-		store = await Backend.FetchStore(id);
+		hasStore = await Backend.OpenStore(name);
 	});
 </script>
 
-{#if store}
-	<StoreEditor name={store.name} location={store?.location} />
+{#if hasStore}
+	<h1>Not error</h1>
 {:else}
 	<h1>Error</h1>
 {/if}

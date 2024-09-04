@@ -12,6 +12,15 @@ export class Backend {
 		}
 	}
 
+	public static async OpenStore(name: string): Promise<boolean> {
+		try {
+			await invoke('open_store', { name });
+			return true;
+		} catch (err: unknown) {
+			return false;
+		}
+	}
+
 	public static async GetDrawing(): Promise<Point[][]> {
 		try {
 			const coordArray: number[][][] = await invoke('send_drawing');
@@ -27,10 +36,11 @@ export class Backend {
 		}
 	}
 
-	public static async SendDrawing(paths: Point[][]): Promise<void> {
+	public static async SendDrawing(paths: Point[][]): Promise<boolean> {
 		try {
 			const shapes = paths.map((path) => path.map((point) => [point.x, point.y]));
 			await invoke('receive_drawing', { shapes });
+			return true;
 		} catch (error) {
 			console.error('Failed to send shapes: ', error);
 			return false;

@@ -1,10 +1,12 @@
-use std::path::Path;
+use std::{fs::File, io::Read, path::Path, sync::Mutex};
 use rusqlite::Connection;
-use crate::{db::create_tables, models::Space};
+use serde_json::Value;
+use tauri::State;
+use crate::{config::{remember_store, ConfigState}, db::create_tables, models::Space};
 
 #[tauri::command]
-pub fn create_store(name: &str, path: &str) -> Result<bool, String> {
-    let db_path = Path::new(path).join(format!("{}.db", name));
+pub fn create_store(state: State<'_, Mutex<ConfigState>>, name: &str, path: &str) -> Result<(), String> {
+    let db_path = &Path::new(path).join(format!("{}.db", name));
     let conn = Connection::open(db_path).map_err(|e| e.to_string())?;
     
     if let Err(e) = create_tables(&conn) {
@@ -12,7 +14,37 @@ pub fn create_store(name: &str, path: &str) -> Result<bool, String> {
         return Err(e.to_string());
     }
     
-    Ok(true)
+    if let Err(e) = remember_store(state, name, db_path.display().to_string().as_str()) {
+        eprintln!("{}", e);
+        return Err(e);
+    }
+
+    Ok(())
+}
+
+#[tauri::command]
+pub fn open_store(state: State<'_, Mutex<ConfigState>>, name: &str) -> Result<(), String> {
+    let state = state.lock().unwrap();
+    let config_path = &state.config_path;
+
+    let mut file = File::open(&config_path).map_err(|e| format!("Failed to open config file: {}", e))?;
+    let mut data = String::new();
+    file.read_to_string(&mut data).map_err(|e| format!("Failed to read config file: {}", e))?;
+
+    let mut json_data: Value = serde_json::from_str(&data)
+        .map_err(|e| format!("Failed to parse JSON data: {}", e))?;
+
+    if let Some(stores) = json_data.get_mut("stores").and_then(|v| v.as_array_mut()) {
+        for store in stores.iter() {
+            if let Some(obj) = store.as_object() {
+                if obj.contains_key(name) {
+                    return Ok(());
+                }
+            }
+        }
+    }
+
+    Err(format!("Store {} not found", name))
 }
 
 #[tauri::command]

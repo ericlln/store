@@ -5,7 +5,7 @@
 
 	onMount(async () => {
 		try {
-			await appWindow.setMinSize(new PhysicalSize(1280, 720));
+			await appWindow.setMinSize(new PhysicalSize(640, 360));
 			goto('/dashboard');
 		} catch (err: unknown) {
 			console.error(`Failed to initialize: ${err}`);

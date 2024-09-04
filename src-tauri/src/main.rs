@@ -1,10 +1,14 @@
 mod db;
 mod models;
 mod commands;
+mod config;
 
+use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use crate::models::{Item, Point, Store};
-use crate::commands::{create_store, new_space, get_space_list};
+use crate::commands::{create_store, open_store, new_space, get_space_list};
+use crate::config::initialize_config;
+use config::ConfigState;
 use rusqlite::Connection;
 use tauri::State;
 
@@ -153,11 +157,17 @@ fn fetch_item(id: i64) -> Result<Item, String> {
 }
 
 fn main() {
+    let config_state = ConfigState {
+        config_path: PathBuf::new(),
+    };
+
     tauri::Builder::default()
+        .manage(Mutex::new(config_state)) // Initialize and manage state
+        .setup(initialize_config)
         .manage(Arc::new(AppState {
             temp_drawing: Mutex::new(Vec::new()), 
         }))
-        .invoke_handler(tauri::generate_handler![new_space, get_space_list, receive_drawing, send_drawing, create_store, fetch_store, fetch_all_stores, add_item, fetch_item])
+        .invoke_handler(tauri::generate_handler![create_store, open_store, new_space, get_space_list, receive_drawing, send_drawing, fetch_store, fetch_all_stores, add_item, fetch_item])
         .run(tauri::generate_context!())
         .expect("Error while running tauri application");
 }
