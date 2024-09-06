@@ -21,6 +21,15 @@ export class Backend {
 		}
 	}
 
+	public static async GetStoreList(): Promise<string[] | null> {
+		try {
+			return await invoke<string[]>('get_store_list');
+		} catch (err: unknown) {
+			console.error('Failed to get store list: ', err);
+			return null;
+		}
+	}
+
 	public static async GetDrawing(): Promise<Point[][]> {
 		try {
 			const coordArray: number[][][] = await invoke('send_drawing');

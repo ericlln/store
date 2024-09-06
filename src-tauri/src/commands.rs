@@ -7,6 +7,11 @@ use crate::{config::{remember_store, ConfigState}, db::create_tables, models::Sp
 #[tauri::command]
 pub fn create_store(state: State<'_, Mutex<ConfigState>>, name: &str, path: &str) -> Result<(), String> {
     let db_path = &Path::new(path).join(format!("{}.db", name));
+
+    if db_path.exists() {
+        return Err(format!("A file with name {} already exists", db_path.display().to_string()))
+    }
+
     let conn = Connection::open(db_path).map_err(|e| e.to_string())?;
     
     if let Err(e) = create_tables(&conn) {
@@ -63,6 +68,32 @@ pub fn new_space(name: &str, drawing: Vec<Vec<(f32, f32)>>) -> Result<i64, Strin
             Err(format!("Failed to save drawing: {}", e))
         }
     }
+}
+
+#[tauri::command]
+pub fn get_store_list(state: State<'_, Mutex<ConfigState>>) -> Result<Vec<String>, String> {
+    let state = state.lock().unwrap();
+    let config_path = &state.config_path;
+
+    let mut file = File::open(&config_path).map_err(|e| format!("Failed to open config file: {}", e))?;
+    let mut data = String::new();
+    file.read_to_string(&mut data).map_err(|e| format!("Failed to read config file: {}", e))?;
+
+    let mut json_data: Value = serde_json::from_str(&data)
+        .map_err(|e| format!("Failed to parse JSON data: {}", e))?;
+
+    let mut store_list = Vec::new();
+    if let Some(stores) = json_data.get_mut("stores").and_then(|v| v.as_array_mut()) {
+        for store in stores.iter() {
+            if let Some(obj) = store.as_object() {
+                for key in obj.keys() {
+                    store_list.push(key.clone());
+                }
+            }
+        }
+    }
+
+    Ok(store_list)
 }
 
 #[tauri::command]

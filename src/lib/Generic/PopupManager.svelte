@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 
-	export let onRemovePopup: (id: string) => void;
+	export let onRemovePopup: (id: string) => void = () => {};
 
 	const popups = new Map<string, HTMLElement>();
 

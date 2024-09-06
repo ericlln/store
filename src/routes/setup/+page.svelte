@@ -6,9 +6,19 @@
 	import PathPicker from '$lib/Generic/PathPicker.svelte';
 	import StoreRow from '$lib/Store/StoreRow.svelte';
 	import { Backend } from '$lib/Util/Backend';
+	import { onMount } from 'svelte';
 
 	let name = '';
 	let path = '';
+
+	let storeList: string[];
+
+	onMount(async () => {
+		const list = await Backend.GetStoreList();
+		if (list) {
+			storeList = list;
+		}
+	});
 
 	const handleSave = async () => {
 		if (name === '' || path === '') {
@@ -38,12 +48,11 @@
 	/>
 	<div class="main-wrapper">
 		<div class="store-list">
-			<!-- todo use actual data -->
-			<StoreRow name="Hi1" path="path1" />
-			<StoreRow name="Hi2" path="path2" />
-			<StoreRow name="Hi3" path="path3" />
-			<StoreRow name="Hi4" path="path4" />
-			<StoreRow name="Hi5" path="path5" />
+			{#if storeList}
+				{#each storeList as store}
+					<StoreRow name={store} path="" />
+				{/each}
+			{/if}
 		</div>
 		<div class="input-list">
 			<div class="input">
