@@ -162,7 +162,7 @@
 </script>
 
 <svelte:window on:resize={resize} on:keydown={onKeyDown} />
-<PopupManager bind:this={popupManager} />
+<PopupManager bind:this={popupManager} createElement={true} />
 
 <div>
 	<Navbar

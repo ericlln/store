@@ -1,10 +1,20 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
+	export let createElement: boolean = false; // Needed for event listener
 	export let onRemovePopup: (id: string) => void = () => {};
 
 	const popups = new Map<string, HTMLElement>();
 	const controller = new AbortController();
+	let ref: HTMLSpanElement;
+
+	onMount(() => {
+		if (createElement) {
+			ref = document.createElement('span');
+			ref.className = 'PopupManager';
+			document.body.appendChild(ref);
+		}
+	});
 
 	export function addPopup(id: string, popup: HTMLElement): void {
 		if (popups.has(id)) return;
@@ -25,6 +35,7 @@
 	}
 
 	export function addGlobalListener(eventType: string, callback: EventListener) {
+		if (!createElement) return;
 		document.addEventListener(eventType, callback, { signal: controller.signal });
 	}
 
@@ -36,8 +47,6 @@
 
 		// Remove all event listeners
 		controller.abort();
+		if (createElement) ref.remove();
 	});
 </script>
-
-<!-- Empty element to add event listeners to -->
-<span />
