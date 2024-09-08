@@ -1,5 +1,4 @@
 <script lang="ts">
-	export let type: string = 'text';
 	export let value: string;
 	export let placeholder: string = '';
 	export let maxlength: number = 100; // 0 => no limit
@@ -8,10 +7,6 @@
 
 	let ref: HTMLInputElement;
 	let fontSize = 0.45 * height;
-
-	$: if (ref) {
-		ref.setAttribute('type', type);
-	}
 </script>
 
 <input

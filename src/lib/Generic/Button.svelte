@@ -5,8 +5,9 @@
 
 	let popupManager: PopupManager;
 
-	export let size: string = 'm';
-	export let type: string = ''; // s, m, l, xl
+	export let size: string = 'm'; // s, m, l, xl
+	export let type: string = '';
+	export let padding: string = '0';
 	export let disabled: boolean = false;
 
 	export let popupText: string = '';
@@ -40,7 +41,7 @@
 
 <PopupManager bind:this={popupManager} onRemovePopup={(id) => {}} />
 <button
-	class={`btn ${size} ${type}`}
+	class={`btn ${size} ${type} ${padding}`}
 	{disabled}
 	on:click
 	on:mouseenter={onMouseEnter}
@@ -67,17 +68,14 @@
 	}
 
 	.btn.s {
-		padding: 4px;
 		font-size: 12px;
 	}
 
 	.btn.m {
-		padding: 6px;
 		font-size: 14px;
 	}
 
 	.btn.l {
-		padding: 8px 16px;
 		font-size: 16px;
 	}
 

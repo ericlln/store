@@ -1,23 +1,24 @@
 import type { Point } from '$lib/Mapper/Geometry';
-import type { Item, Store } from './Models';
+import type { Item, Space, Store } from './Models';
 import { invoke } from '@tauri-apps/api';
 
 export class Backend {
 	public static async CreateStore(name: string, path: string): Promise<boolean> {
 		try {
-			return await invoke('create_store', { name, path });
+			await invoke('create_store', { name, path });
+			return true;
 		} catch (err: unknown) {
 			console.error('Failed to create store: ', err);
 			return false;
 		}
 	}
 
-	public static async OpenStore(name: string): Promise<boolean> {
+	public static async OpenStore(name: string): Promise<string | null> {
 		try {
-			await invoke('open_store', { name });
-			return true;
+			return await invoke('open_store', { name });
 		} catch (err: unknown) {
-			return false;
+			console.error(`Failed to get store: ${err}`);
+			return null;
 		}
 	}
 
@@ -26,6 +27,27 @@ export class Backend {
 			return await invoke<string[]>('get_store_list');
 		} catch (err: unknown) {
 			console.error('Failed to get store list: ', err);
+			return null;
+		}
+	}
+
+	public static async CreateSpace(
+		storeName: string,
+		name: string,
+		drawing: Point[][]
+	): Promise<void> {
+		try {
+			await invoke('create_space', { storeName, name, drawing });
+		} catch (err: unknown) {
+			console.error(`Failed to create store list: ${err}`);
+		}
+	}
+
+	public static async GetSpaces(storeName: string): Promise<Space[] | null> {
+		try {
+			return await invoke<Space[]>('get_spaces', { storeName });
+		} catch (err: unknown) {
+			console.error(`Failed to get spaces: ${err}`);
 			return null;
 		}
 	}

@@ -1,6 +1,6 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct Point {
     pub x: f64,
     pub y: f64,
@@ -10,7 +10,7 @@ pub struct Point {
 pub struct Space {
     pub id: i64,
     pub name: String,
-    pub drawing: Vec<Vec<(f32, f32)>>
+    pub drawing: Vec<Vec<Point>>
 }
 
 #[derive(Serialize)]

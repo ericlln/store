@@ -9,7 +9,7 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import Icon from '$lib/Generic/Icon.svelte';
 	import ToolbarPopup from './ToolbarPopup.svelte';
-	import ModalPopup from '$lib/Generic/ModalPopup.svelte';
+	import ModalInfo from '$lib/Generic/ModalInfo.svelte';
 	import type { Store } from '$lib/Util/Models';
 
 	let canvas: HTMLCanvasElement;
@@ -98,7 +98,7 @@
 
 		popupManager.addPopup(
 			id,
-			Util.ComponentToDom(ModalPopup, {
+			Util.ComponentToDom(ModalInfo, {
 				id,
 				parent: popupManager,
 				title: 'Help',

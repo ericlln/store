@@ -1,3 +1,4 @@
+use std::error::Error;
 use std::fs;
 use std::fs::File;
 use std::io::{Read, Write};
@@ -21,7 +22,7 @@ pub fn initialize_config(app: &mut tauri::App) -> Result<(), Box<dyn std::error:
 
         if !config_path.exists() {
             let config = json!({
-                "stores": [],
+                "stores": {},
             });
     
             if let Err(e) = write_json_to_file(&config_path, &config) {
@@ -40,27 +41,57 @@ pub fn initialize_config(app: &mut tauri::App) -> Result<(), Box<dyn std::error:
     Ok(())
 }
 
-pub fn remember_store(state: State<'_, Mutex<ConfigState>>, name: &str, path: &str) -> Result<(), String> {
+pub fn read_config(state: &State<'_, Mutex<ConfigState>>) -> Result<Value, Box<dyn Error>> {
     let state = state.lock().unwrap();
     let config_path = &state.config_path;
 
-    let mut file = File::open(&config_path).map_err(|e| format!("Failed to open config file: {}", e))?;
+    let mut file = File::open(&config_path)?;
     let mut data = String::new();
-    file.read_to_string(&mut data).map_err(|e| format!("Failed to read config file: {}", e))?;
+    file.read_to_string(&mut data)?;
 
-    let mut json_data: Value = serde_json::from_str(&data)
-        .map_err(|e| format!("Failed to parse JSON data: {}", e))?;
+    let json_data: Value = serde_json::from_str(&data)?;
 
-    if let Some(stores) = json_data.get_mut("stores").and_then(|v| v.as_array_mut()) {
-        stores.push(json!({name: path}));
+    Ok(json_data)
+}
+
+pub fn remember_store(state: &State<'_, Mutex<ConfigState>>, name: &str, path: &str) -> Result<(), String> {
+    let mut config_json = read_config(state).map_err(|e| e.to_string())?;
+
+    let state = state.lock().unwrap();
+    let config_path = &state.config_path;
+
+    if let Some(stores) = config_json.get_mut("stores").and_then(|v| v.as_object_mut()) {
+        stores.insert(name.to_string(), Value::String(path.to_string()));
     } else {
-        return Err("Failed to find or create the 'stores' array in the JSON data.".to_string());
+        return Err(format!("Failed to save store {name} with path {path} into config").to_string());
     }
 
-    write_json_to_file(&config_path, &json_data)
+    write_json_to_file(&config_path, &config_json)
         .map_err(|e| format!("Failed to write JSON to file: {}", e))?;
 
     Ok(())
+}
+
+pub fn forget_store(state: &State<'_, Mutex<ConfigState>>, name: &str) ->Result<(), String> {
+    let mut config_json = read_config(state).map_err(|e| format!("Error reading config: {e}"))?;
+
+    if let Some(stores) = config_json.get_mut("stores").and_then(|v| v.as_object_mut()) {
+        stores.remove(name);
+    }
+
+    Ok(())
+}
+
+pub fn retrieve_store_path(state: &State<'_, Mutex<ConfigState>>, store_name: &str) -> Result<String, String> {
+    let config_json = read_config(state).map_err(|e| e.to_string())?;
+
+    if let Some(stores) = config_json.get("stores").and_then(|v| v.as_object()) {
+        if let Some(path) = stores.get(store_name).and_then(|v| v.as_str()) {
+            return Ok(path.to_string());
+        }
+    }
+        
+    Err(format!("Store {store_name} not found"))
 }
 
 fn write_json_to_file(path: &PathBuf, data: &serde_json::Value) -> std::io::Result<()> {

@@ -4,6 +4,7 @@
 	export let onRemovePopup: (id: string) => void = () => {};
 
 	const popups = new Map<string, HTMLElement>();
+	const controller = new AbortController();
 
 	export function addPopup(id: string, popup: HTMLElement): void {
 		if (popups.has(id)) return;
@@ -23,10 +24,20 @@
 		return popups.has(id);
 	}
 
+	export function addGlobalListener(eventType: string, callback: EventListener) {
+		document.addEventListener(eventType, callback, { signal: controller.signal });
+	}
+
 	onDestroy(() => {
 		for (const popup of popups.values()) {
 			document.body.removeChild(popup);
 		}
 		popups.clear();
+
+		// Remove all event listeners
+		controller.abort();
 	});
 </script>
+
+<!-- Empty element to add event listeners to -->
+<span />

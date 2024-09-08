@@ -32,7 +32,6 @@
 	});
 </script>
 
-loading
 <div bind:this={ref} class="popup">
 	{popupText}
 </div>

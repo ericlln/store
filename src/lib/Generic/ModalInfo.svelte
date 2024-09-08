@@ -1,10 +1,13 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import PopupManager from './PopupManager.svelte';
 
 	export let id: string;
 	export let parent: PopupManager;
 	export let title: string = '';
 	export let description: string = '';
+
+	const dispatch = createEventDispatcher();
 
 	const onClose = () => {
 		parent.removePopup(id);

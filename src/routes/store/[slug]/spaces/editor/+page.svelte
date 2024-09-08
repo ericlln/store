@@ -1,18 +1,23 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import Navbar from '$lib/Generic/Navbar.svelte';
-	import { onMount } from 'svelte';
-	import { Canvas } from '$lib/Mapper/Canvas';
-	import type { Point } from '$lib/Mapper/Geometry';
-	import { Backend } from '$lib/Util/Backend';
-	import PopupManager from '$lib/Generic/PopupManager.svelte';
-	import { Util } from '$lib/Util/Util';
-	import ToolbarPopup from '$lib/Mapper/ToolbarPopup.svelte';
+	import { page } from '$app/stores';
 	import Button from '$lib/Generic/Button.svelte';
 	import Icon from '$lib/Generic/Icon.svelte';
-	import ModalPopup from '$lib/Generic/ModalPopup.svelte';
+	import ModalInfo from '$lib/Generic/ModalInfo.svelte';
+	import ModalInput from '$lib/Generic/ModalInput.svelte';
+	import Navbar from '$lib/Generic/Navbar.svelte';
+	import PopupManager from '$lib/Generic/PopupManager.svelte';
+	import { Canvas } from '$lib/Mapper/Canvas';
+	import type { Point } from '$lib/Mapper/Geometry';
+	import ToolbarPopup from '$lib/Mapper/ToolbarPopup.svelte';
+	import { Backend } from '$lib/Util/Backend';
+	import { Util } from '$lib/Util/Util';
+	import { onMount } from 'svelte';
 
 	//todo improve drawing system: constant canvas dimensions regardless of canvas element size, add zooming + panning
+
+	const storeName = $page.params.slug;
+	let spaceName: string = ''; // Variable to hold input value from the modal
 
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D | null;
@@ -21,6 +26,22 @@
 	let paths: Point[][] = [];
 	let redoStack: Point[][] = [];
 	let tempPath: Point[] | null = null;
+
+	onMount(async () => {
+		//Show popup to name the space before drawing
+		let id = 'inputPopup';
+		popupManager.addPopup(id, Util.ComponentToDom(ModalInput, { id, parent: popupManager }));
+		popupManager.addGlobalListener('spaceNamed', spaceNamedListener);
+
+		ctx = canvas.getContext('2d');
+		paths = await Backend.GetDrawing();
+		resize();
+	});
+
+	const spaceNamedListener = (event: Event) => {
+		const customEvent = event as CustomEvent<{ value: string }>;
+		spaceName = customEvent.detail.value;
+	};
 
 	const redraw = () => {
 		if (!ctx) return;
@@ -57,12 +78,6 @@
 		paths.push(tempPath);
 		tempPath = null;
 	};
-
-	onMount(async () => {
-		ctx = canvas.getContext('2d');
-		paths = await Backend.GetDrawing();
-		resize();
-	});
 
 	const onMenuButtonClick = (evt: MouseEvent) => {
 		const ele = evt.target as HTMLButtonElement;
@@ -118,7 +133,7 @@
 
 		popupManager.addPopup(
 			id,
-			Util.ComponentToDom(ModalPopup, {
+			Util.ComponentToDom(ModalInfo, {
 				id,
 				parent: popupManager,
 				title: 'Help',
@@ -128,6 +143,9 @@
 	};
 
 	const onKeyDown = (evt: KeyboardEvent) => {
+		//Ignore key presses if typing in ModalInput
+		if (popupManager.hasPopup('inputPopup')) return;
+
 		evt.preventDefault();
 		if (evt.ctrlKey) {
 			if (evt.key === 'z') {
@@ -144,7 +162,7 @@
 </script>
 
 <svelte:window on:resize={resize} on:keydown={onKeyDown} />
-<PopupManager bind:this={popupManager} onRemovePopup={(id) => {}} />
+<PopupManager bind:this={popupManager} />
 
 <div>
 	<Navbar
@@ -154,10 +172,8 @@
 			goto('/setup');
 		}}
 		handleNext={async () => {
-			const resp = await Backend.SendDrawing(paths);
-			if (!resp) return; //todo toast
-
-			goto('/setup');
+			await Backend.CreateSpace(storeName, spaceName, paths);
+			//if (!resp) return; //todo toast
 		}}
 	/>
 	<div class="floating">
