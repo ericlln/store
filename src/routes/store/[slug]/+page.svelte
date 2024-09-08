@@ -26,7 +26,6 @@
 		}}>Spaces</Button
 	>
 	<Button>Items</Button>
-	<Button></Button>
 {:else}
 	<h1>Error</h1>
 {/if}

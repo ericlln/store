@@ -35,11 +35,13 @@ export class Backend {
 		storeName: string,
 		name: string,
 		drawing: Point[][]
-	): Promise<void> {
+	): Promise<boolean> {
 		try {
 			await invoke('create_space', { storeName, name, drawing });
+			return true;
 		} catch (err: unknown) {
 			console.error(`Failed to create store list: ${err}`);
+			return false;
 		}
 	}
 
