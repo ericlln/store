@@ -57,7 +57,7 @@
 		<div class="input-list">
 			<div class="input">
 				<span class="text">Store name</span>
-				<Input bind:value={name} placeholder="Name" width={250} height={34} />
+				<Input bind:value={name} placeholder="Name" width="250px" height={34} />
 			</div>
 			<Divider />
 			<div class="input">

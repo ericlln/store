@@ -25,7 +25,7 @@
 <div class="modal-background">
 	<div class="modal-content">
 		<div class="modal-inputs">
-			<Input bind:value placeholder="Name of space" height={50} width={500} />
+			<Input bind:value placeholder="Name of space" height={50} width="500px" />
 			<Button on:click={onComplete}>
 				<Icon
 					viewBox="0 -960 960 960"

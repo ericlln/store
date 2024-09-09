@@ -9,9 +9,9 @@
 </script>
 
 <div class="nav-container">
-	<Button on:click={handleBack} disabled={handleBack === null}>{backLabel}</Button>
+	<Button on:click={handleBack} padding="4px" disabled={handleBack === null}>{backLabel}</Button>
 	<h1>{title}</h1>
-	<Button on:click={handleNext} disabled={handleNext === null}>{nextLabel}</Button>
+	<Button on:click={handleNext} padding="4px" disabled={handleNext === null}>{nextLabel}</Button>
 </div>
 
 <style>

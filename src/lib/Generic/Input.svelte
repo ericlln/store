@@ -3,7 +3,7 @@
 	export let placeholder: string = '';
 	export let maxlength: number = 100; // 0 => no limit
 	export let height: number = 30;
-	export let width: number = 200;
+	export let width = '200px';
 
 	let ref: HTMLInputElement;
 	let fontSize = 0.45 * height;
@@ -14,7 +14,7 @@
 	bind:value
 	{placeholder}
 	{maxlength}
-	style="width: {width}px; height: {height}px; font-size: {fontSize}px"
+	style="width: {width}; height: {height}px; font-size: {fontSize}px"
 />
 
 <style>

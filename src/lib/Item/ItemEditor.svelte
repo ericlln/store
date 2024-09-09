@@ -19,7 +19,7 @@
 	<div class="d">
 		<div class="smaller">
 			<Input bind:value={location} placeholder="Store" maxlength={64} />
-			<Input bind:value={quantity} placeholder="Quantity" maxlength={64} type="number" />
+			<Input bind:value={quantity} placeholder="Quantity" maxlength={64} />
 		</div>
 		<div class="smaller">
 			<textarea bind:value={notes} placeholder={'Notes'} />
