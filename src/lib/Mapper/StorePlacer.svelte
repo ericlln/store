@@ -118,7 +118,7 @@
 
 <canvas bind:this={canvas} on:mousemove={handleMouseMove} on:click={handleMouseClick} />
 <div class="floating">
-	<Button size="xl" type="icon" on:click={onMenuButtonClick}>
+	<Button fontSize="xl" type="centered" on:click={onMenuButtonClick}>
 		<Icon
 			viewBox="0 -960 960 960"
 			path="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"

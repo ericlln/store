@@ -11,8 +11,8 @@
 	<div class="row">
 		<div class="column">
 			<Button
-				size="xl"
-				type="icon"
+				fontSize="xl"
+				type="centered"
 				on:click={() => {
 					goto('/setup');
 				}}
@@ -26,7 +26,7 @@
 			>
 		</div>
 		<div class="column">
-			<Button size="xl" type="icon" on:click={() => goto('/store/Hhh')}>
+			<Button fontSize="xl" type="centered" on:click={() => goto('/store/Hhh')}>
 				<Icon
 					viewBox="0 -960 960 960"
 					path="M320-280q17 0 28.5-11.5T360-320q0-17-11.5-28.5T320-360q-17 0-28.5 11.5T280-320q0 17 11.5 28.5T320-280Zm0-160q17 0 28.5-11.5T360-480q0-17-11.5-28.5T320-520q-17 0-28.5 11.5T280-480q0 17 11.5 28.5T320-440Zm0-160q17 0 28.5-11.5T360-640q0-17-11.5-28.5T320-680q-17 0-28.5 11.5T280-640q0 17 11.5 28.5T320-600Zm120 320h240v-80H440v80Zm0-160h240v-80H440v80Zm0-160h240v-80H440v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"
@@ -38,7 +38,7 @@
 	</div>
 	<div class="row">
 		<div class="column">
-			<Button size="xl" type="icon" disabled={true}>
+			<Button fontSize="xl" type="centered" disabled={true}>
 				<Icon
 					viewBox="0 -960 960 960"
 					path="M300-360h60v-160h-60v50h-60v60h60v50Zm100-50h320v-60H400v60Zm200-110h60v-50h60v-60h-60v-50h-60v160Zm-360-50h320v-60H240v60Zm80 450v-80H160q-33 0-56.5-23.5T80-280v-480q0-33 23.5-56.5T160-840h640q33 0 56.5 23.5T880-760v480q0 33-23.5 56.5T800-200H640v80H320ZM160-280h640v-480H160v480Zm0 0v-480 480Z"
@@ -48,7 +48,7 @@
 			>
 		</div>
 		<div class="column">
-			<Button size="xl" type="icon" disabled={true}>
+			<Button fontSize="xl" type="centered" disabled={true}>
 				<Icon
 					viewBox="0 -960 960 960"
 					path="M300-360h60v-160h-60v50h-60v60h60v50Zm100-50h320v-60H400v60Zm200-110h60v-50h60v-60h-60v-50h-60v160Zm-360-50h320v-60H240v60Zm80 450v-80H160q-33 0-56.5-23.5T80-280v-480q0-33 23.5-56.5T160-840h640q33 0 56.5 23.5T880-760v480q0 33-23.5 56.5T800-200H640v80H320ZM160-280h640v-480H160v480Zm0 0v-480 480Z"

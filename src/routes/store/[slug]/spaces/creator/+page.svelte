@@ -180,8 +180,8 @@
 	/>
 	<div class="floating">
 		<Button
-			size="xl"
-			type="icon"
+			fontSize="xl"
+			type="centered"
 			popupText="Toggle Toolbar"
 			popupDir="r"
 			on:click={onMenuButtonClick}
