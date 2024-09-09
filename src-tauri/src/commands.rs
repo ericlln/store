@@ -82,6 +82,33 @@ pub fn create_space(state: State<'_, Mutex<ConfigState>>, store_name: &str, name
 }
 
 #[tauri::command]
+pub fn get_space(state: State<'_, Mutex<ConfigState>>, store_name: &str, space_id: i64) -> Result<Space, String> {
+    let path = retrieve_store_path(&state, store_name).map_err(|e| e.to_string())?;
+    let conn = Connection::open(path).map_err(|e| e.to_string())?;
+
+    let mut stmt = conn.prepare(
+        "SELECT id, name, drawing_json
+        FROM spaces
+        WHERE id = ?1"
+    ).map_err(|e| e.to_string())?;
+
+    let space = stmt.query_row([space_id], |row| {
+        let id: i64 = row.get(0)?;
+        let name: String = row.get(1)?;
+        let drawing_json: String = row.get(2)?;
+        let drawing: Result<Vec<Vec<Point>>, serde_json::Error> = serde_json::from_str(&drawing_json);
+
+        match drawing {
+            Ok(drawing) => Ok(Space { id, name, drawing }),
+            Err(e) => Err(rusqlite::Error::FromSqlConversionFailure(0, rusqlite::types::Type::Text, Box::new(e))),
+        }
+    });
+
+    space.map_err(|e| e.to_string())
+}
+
+//todo rewrite to only return list of names + ids
+#[tauri::command]
 pub fn get_spaces(state: State<'_, Mutex<ConfigState>>, store_name: &str) -> Result<Vec<Space>, String> {
     let path = retrieve_store_path(&state, store_name)?;
     let conn = Connection::open(path).map_err(|e| e.to_string())?;

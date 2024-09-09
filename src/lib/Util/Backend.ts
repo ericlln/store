@@ -45,6 +45,15 @@ export class Backend {
 		}
 	}
 
+	public static async GetSpace(storeName: string, spaceId: number): Promise<Space | null> {
+		try {
+			return await invoke('get_space', { storeName, spaceId });
+		} catch (err: unknown) {
+			console.error(`Failed to get space with id ${spaceId} in ${storeName}: ${err}`);
+			return null;
+		}
+	}
+
 	public static async GetSpaces(storeName: string): Promise<Space[] | null> {
 		try {
 			return await invoke<Space[]>('get_spaces', { storeName });

@@ -174,6 +174,8 @@
 		handleNext={async () => {
 			const resp = await Backend.CreateSpace(storeName, spaceName, paths);
 			if (!resp) return; //todo toast
+
+			await goto(`/store/${storeName}/spaces`);
 		}}
 	/>
 	<div class="floating">
