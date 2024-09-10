@@ -7,9 +7,6 @@
 	export let storeName: string;
 	export let space: Space;
 
-	export let spaceName: string = '';
-	export let spaceId: number = 0;
-
 	const handleEdit = () => {
 		goto(`/store/${storeName}/spaces/editor/${space.id}`);
 	};
