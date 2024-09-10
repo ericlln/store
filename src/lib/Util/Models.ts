@@ -3,7 +3,7 @@ import type { Point } from '$lib/Mapper/Geometry';
 export interface Space {
 	id: number;
 	name: string;
-	drawing: Point[][];
+	drawing: Point[][] | undefined;
 }
 
 export interface Store {

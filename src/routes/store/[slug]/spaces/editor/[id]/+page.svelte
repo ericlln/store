@@ -19,7 +19,7 @@
 		if (resp && ctx) {
 			space = resp;
 			Canvas.Resize(canvas);
-			Canvas.DrawPaths(ctx, space.drawing);
+			if (space.drawing) Canvas.DrawPaths(ctx, space.drawing);
 		}
 	});
 </script>

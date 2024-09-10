@@ -54,9 +54,9 @@ export class Backend {
 		}
 	}
 
-	public static async GetSpaces(storeName: string): Promise<Space[] | null> {
+	public static async GetSpaceList(storeName: string): Promise<Space[] | null> {
 		try {
-			return await invoke<Space[]>('get_spaces', { storeName });
+			return await invoke<Space[]>('get_space_list', { storeName });
 		} catch (err: unknown) {
 			console.error(`Failed to get spaces: ${err}`);
 			return null;

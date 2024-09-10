@@ -10,7 +10,7 @@ pub struct Point {
 pub struct Space {
     pub id: i64,
     pub name: String,
-    pub drawing: Vec<Vec<Point>>
+    pub drawing: Option<Vec<Vec<Point>>>
 }
 
 #[derive(Serialize)]

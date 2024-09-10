@@ -13,7 +13,7 @@
 	let spaces: Space[] | null = null;
 
 	onMount(async () => {
-		spaces = await Backend.GetSpaces(storeName);
+		spaces = await Backend.GetSpaceList(storeName);
 	});
 </script>
 

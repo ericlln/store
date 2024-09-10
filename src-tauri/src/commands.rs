@@ -99,7 +99,7 @@ pub fn get_space(state: State<'_, Mutex<ConfigState>>, store_name: &str, space_i
         let drawing: Result<Vec<Vec<Point>>, serde_json::Error> = serde_json::from_str(&drawing_json);
 
         match drawing {
-            Ok(drawing) => Ok(Space { id, name, drawing }),
+            Ok(drawing) => Ok(Space { id, name, drawing: Some(drawing) }),
             Err(e) => Err(rusqlite::Error::FromSqlConversionFailure(0, rusqlite::types::Type::Text, Box::new(e))),
         }
     });
@@ -107,9 +107,8 @@ pub fn get_space(state: State<'_, Mutex<ConfigState>>, store_name: &str, space_i
     space.map_err(|e| e.to_string())
 }
 
-//todo rewrite to only return list of names + ids
 #[tauri::command]
-pub fn get_spaces(state: State<'_, Mutex<ConfigState>>, store_name: &str) -> Result<Vec<Space>, String> {
+pub fn get_space_list(state: State<'_, Mutex<ConfigState>>, store_name: &str) -> Result<Vec<Space>, String> {
     let path = retrieve_store_path(&state, store_name)?;
     let conn = Connection::open(path).map_err(|e| e.to_string())?;
 
@@ -121,44 +120,10 @@ pub fn get_spaces(state: State<'_, Mutex<ConfigState>>, store_name: &str) -> Res
     let iter = stmt.query_map([], |row| {
         let id: i64 = row.get(0)?;
         let name: String = row.get(1)?;
-        let drawing_json: String = row.get(2)?;
-
-        let drawing: Result<Vec<Vec<Point>>, serde_json::Error> = from_str(&drawing_json);
-        match drawing {
-            Ok(drawing) => Ok(Space { id, name, drawing }),
-            Err(e) => Err(rusqlite::Error::FromSqlConversionFailure(0, rusqlite::types::Type::Text, Box::new(e)).into()),
-        }
+        Ok(Space { id, name, drawing: None })
     }).map_err(|e| e.to_string())?;
 
     let spaces: Vec<Space> = iter.collect::<Result<Vec<Space>>>().map_err(|e| e.to_string())?;
 
     Ok(spaces)
 }
-
-// #[tauri::command]
-// pub fn fetch_space(id: i64) -> Result<Space, String> {
-//     let conn = Connection::open("shapes.db").map_err(|e| e.to_string())?;
-
-//     let mut stmt = conn.prepare(
-//         "SELECT *
-//         FROM STORES
-//         WHERE ID = ?1"
-//     ).map_err(|e| e.to_string())?;
-
-//     match stmt.query_row([id], |row| {
-//         let drawing_json: String = row.get(2)?;
-//         let drawing: Vec<Vec<(f32, f32)>> = serde_json::from_str(&drawing_json).unwrap(); //todo handle error
-
-//         Ok(Space {
-//             id: row.get(0)?,
-//             name: row.get(1)?,
-//             drawing,
-//         })
-//     }){
-//         Ok(space) => Ok(space),
-//         Err(e) => {
-//             eprintln!("Query error: {}", e);
-//             Err(format!("Space with id {} not found", id))
-//         }
-//     }
-// }
