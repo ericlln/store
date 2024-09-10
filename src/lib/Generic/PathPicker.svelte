@@ -24,4 +24,4 @@
 	};
 </script>
 
-<Button on:click={selectPath} fontSize="l" padding="8px 20px">Browse</Button>
+<Button on:click={selectPath} fontSize="m" padding="8px 20px">Browse</Button>

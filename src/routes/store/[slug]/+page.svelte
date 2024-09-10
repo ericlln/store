@@ -4,30 +4,48 @@
 	import Button from '$lib/Generic/Button.svelte';
 	import Icon from '$lib/Generic/Icon.svelte';
 	import Input from '$lib/Generic/Input.svelte';
+	import NavHeader from '$lib/Generic/NavHeader.svelte';
 	import PathPicker from '$lib/Generic/PathPicker.svelte';
 	import { Backend } from '$lib/Util/Backend';
 	import { onMount } from 'svelte';
 
+	let origPath: string | null = null;
 	let path: string | null = null;
+	let origStoreName = $page.params.slug;
+	let storeName = origStoreName;
+	let storeEdited = false;
 
-	let storeName = $page.params.slug;
 	// let spaceCnt: number | null = null;
 	// let binCnt: number | null = null;
 	// let itemCnt: number | null = null;
 
 	onMount(async () => {
-		path = await Backend.OpenStore(storeName);
+		origPath = path = await Backend.OpenStore(storeName);
 	});
+
+	const isStoreModified = (): boolean => {
+		if (storeName !== origStoreName) return true;
+		if (path !== origPath) return true;
+
+		return false;
+	};
 
 	const handlePathSelected = (e: CustomEvent) => {
 		path = e.detail.path;
+		storeEdited = isStoreModified();
+	};
+
+	const handleNameInput = () => {
+		storeEdited = isStoreModified();
 	};
 </script>
 
 {#if path}
 	<div class="layout-wrapper">
+		<NavHeader title="Store Overview" />
+
 		<div class="inputs-container">
-			<Input width="100%" height={50} bind:value={storeName} />
+			<Input width="100%" height={50} bind:value={storeName} on:input={handleNameInput} />
 			<div class="path-editor">
 				<span class="text path">{path}</span>
 				<PathPicker on:pathSelected={handlePathSelected} />
@@ -83,7 +101,7 @@
 			</Button>
 		</div>
 
-		<Button fontSize="l" width="100%">Save</Button>
+		<Button fontSize="l" width="100%" padding="10px 0px" disabled={!storeEdited}>Save</Button>
 	</div>
 {:else}
 	<h1>Error</h1>

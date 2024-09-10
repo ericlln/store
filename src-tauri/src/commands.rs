@@ -31,14 +31,19 @@ pub fn open_store(state: State<'_, Mutex<ConfigState>>, name: &str) -> Result<St
 
     if let Some(stores) = config_json.get("stores").and_then(|v| v.as_object()) {
         if let Some(path) = stores.get(name).and_then(|v| v.as_str()) {
-            if !PathBuf::from(path).exists() {
+            let path_buf = PathBuf::from(path);
+            if !path_buf.exists() {
                 return Err(format!("Store {name} does not exist at {path}"));
             }
 
-            return Ok(path.to_string());
+            // Return the parent directory rather than the full path
+            if let Some(parent_dir) = path_buf.parent() {
+                return Ok(parent_dir.display().to_string());
+            } else {
+                return Err(format!("Unable to get the parent directory of {path}"));
+            }
         }
     }
-
 
     Err(format!("Store {name} not found"))
 }

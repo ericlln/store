@@ -12,6 +12,7 @@
 <input
 	bind:this={ref}
 	bind:value
+	on:input
 	{placeholder}
 	{maxlength}
 	style="width: {width}; height: {height}px; font-size: {fontSize}px"
