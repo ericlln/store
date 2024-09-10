@@ -3,9 +3,7 @@
 	import Icon from './Icon.svelte';
 
 	export let title: string;
-	export let onBack: () => void = () => {
-		history.back();
-	};
+	export let onBack: () => void;
 </script>
 
 <div class="layout-wrapper">

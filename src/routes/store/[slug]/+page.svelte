@@ -42,7 +42,12 @@
 
 {#if path}
 	<div class="layout-wrapper">
-		<NavHeader title="Store Overview" />
+		<NavHeader
+			title="Store Overview"
+			onBack={() => {
+				goto(`/setup`); //todo for now
+			}}
+		/>
 
 		<div class="inputs-container">
 			<Input width="100%" height={50} bind:value={storeName} on:input={handleNameInput} />
