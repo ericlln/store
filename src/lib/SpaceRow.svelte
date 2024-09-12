@@ -1,14 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Button from './Generic/Button.svelte';
-	import Icon from './Generic/Icon.svelte';
 	import type { Space } from './Util/Models';
 
 	export let storeName: string;
 	export let space: Space;
 
 	const handleEdit = () => {
-		goto(`/store/${storeName}/spaces/editor/${space.id}`);
+		goto(`/store/${storeName}/spaces/${space.id}`);
 	};
 </script>
 

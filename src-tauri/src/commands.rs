@@ -1,6 +1,5 @@
 use std::{path::{Path, PathBuf}, sync::Mutex};
 use rusqlite::{Connection, Result};
-use serde_json::from_str;
 use tauri::State;
 use crate::{config::{read_config, remember_store, retrieve_store_path, ConfigState}, db::create_tables, models::{Point, Space}};
 
@@ -131,4 +130,17 @@ pub fn get_space_list(state: State<'_, Mutex<ConfigState>>, store_name: &str) ->
     let spaces: Vec<Space> = iter.collect::<Result<Vec<Space>>>().map_err(|e| e.to_string())?;
 
     Ok(spaces)
+}
+
+#[tauri::command]
+pub fn create_bin(state: State<'_, Mutex<ConfigState>>, store_name: &str, space_id: i64, name: &str, x: f64, y: f64) -> Result<(), String> {
+    let path = retrieve_store_path(&state, store_name)?;
+    let conn = Connection::open(path).map_err(|e| e.to_string())?;
+
+    conn.execute(
+        "INSERT INTO bins (space_id, name, x, y) VALUES (?1, ?2, ?3, ?4)",
+        (space_id, name, x, y)
+    ).map_err(|e| e.to_string())?;
+
+    Ok(())
 }

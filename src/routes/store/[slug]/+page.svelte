@@ -63,8 +63,8 @@
 				type="space-between"
 				padding="0px 12px"
 				width="100%"
-				on:click={async () => {
-					await goto(`/store/${storeName}/spaces`);
+				on:click={() => {
+					goto(`/store/${storeName}/spaces`);
 				}}
 			>
 				<Icon

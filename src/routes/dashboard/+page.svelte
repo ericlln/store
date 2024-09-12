@@ -1,10 +1,7 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/Generic/Button.svelte';
 	import Icon from '$lib/Generic/Icon.svelte';
-
-	onMount(async () => {});
 </script>
 
 <div class="layout-wrapper">

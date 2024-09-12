@@ -63,6 +63,27 @@ export class Backend {
 		}
 	}
 
+	public static async CreateBin(
+		storeName: string,
+		spaceId: number,
+		name: string,
+		x: number,
+		y: number
+	): Promise<boolean> {
+		try {
+			return await invoke('create_bin', {
+				storeName,
+				spaceId,
+				name,
+				x,
+				y
+			});
+		} catch (err: unknown) {
+			console.error('Failed to create bin: ', err);
+			return false;
+		}
+	}
+
 	public static async GetDrawing(): Promise<Point[][]> {
 		try {
 			const coordArray: number[][][] = await invoke('send_drawing');
@@ -88,20 +109,6 @@ export class Backend {
 			return false;
 		}
 	}
-
-	// public static async CreateStore(name: string, location: Point): Promise<boolean> {
-	// 	try {
-	// 		return await invoke('create_store', {
-	// 			name: name,
-	// 			spaceId: 1,
-	// 			x: location.x,
-	// 			y: location.y
-	// 		});
-	// 	} catch (err: unknown) {
-	// 		console.error('Failed to create store: ', err);
-	// 		return false;
-	// 	}
-	// }
 
 	public static async FetchStore(id: number): Promise<Store | null> {
 		try {

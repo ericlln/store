@@ -6,6 +6,13 @@ export interface Space {
 	drawing: Point[][] | undefined;
 }
 
+export interface Bin {
+	id: number;
+	spaceId: number;
+	name: string;
+	location: Point;
+}
+
 export interface Store {
 	id: number;
 	spaceId: number;
