@@ -34,7 +34,6 @@
 		popupManager.addGlobalListener('spaceNamed', spaceNamedListener);
 
 		ctx = canvas.getContext('2d');
-		paths = await Backend.GetDrawing();
 		resize();
 	});
 
@@ -109,7 +108,6 @@
 		Canvas.Clear(ctx, canvas);
 		paths.length = 0;
 		redoStack.length = 0;
-		Backend.SendDrawing(paths);
 	};
 
 	const onUndo = () => {

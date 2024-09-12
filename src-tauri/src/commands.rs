@@ -1,7 +1,7 @@
 use std::{path::{Path, PathBuf}, sync::Mutex};
 use rusqlite::{Connection, Result};
 use tauri::State;
-use crate::{config::{read_config, remember_store, retrieve_store_path, ConfigState}, db::create_tables, models::{Point, Space}};
+use crate::{config::{read_config, remember_store, retrieve_store_path, ConfigState}, db::create_tables, models::{Bin, Point, Space}};
 
 #[tauri::command]
 pub fn create_store(state: State<'_, Mutex<ConfigState>>, name: &str, path: &str) -> Result<(), String> {
@@ -143,4 +143,30 @@ pub fn create_bin(state: State<'_, Mutex<ConfigState>>, store_name: &str, space_
     ).map_err(|e| e.to_string())?;
 
     Ok(())
+}
+
+#[tauri::command]
+pub fn get_bin_list(state: State<'_, Mutex<ConfigState>>, store_name: &str, space_id: i64) -> Result<Vec<Bin>, String> {
+    let path = retrieve_store_path(&state, store_name)?;
+    let conn = Connection::open(path).map_err(|e| e.to_string())?;
+
+    let mut stmt = conn.prepare(
+        "SELECT id, space_id, name, x, y
+        FROM bins
+        WHERE space_id = ?1"
+    ).map_err(|e| e.to_string())?;
+
+    let iter = stmt.query_map([space_id], |row| {
+        let id: i64 = row.get(0)?;
+        let space_id: i64 = row.get(1)?;
+        let name: String = row.get(2)?;
+        let x: f64 = row.get(3)?;
+        let y: f64 = row.get(4)?;
+
+        Ok(Bin { id, space_id, name, location: Point {x, y} })
+    }).map_err(|e| e.to_string())?;
+
+    let bins: Vec<Bin> = iter.collect::<Result<Vec<Bin>>>().map_err(|e| e.to_string())?;
+
+    Ok(bins)
 }

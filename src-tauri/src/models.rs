@@ -14,6 +14,15 @@ pub struct Space {
 }
 
 #[derive(Serialize)]
+pub struct Bin {
+    pub id: i64,
+    #[serde(rename="spaceId")]
+    pub space_id: i64,
+    pub name: String,
+    pub location: Point
+}
+
+#[derive(Serialize)]
 pub struct Store {
     pub id: i64,
     pub name: String,

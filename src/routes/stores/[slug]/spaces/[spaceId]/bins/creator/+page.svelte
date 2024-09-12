@@ -16,7 +16,14 @@
 	const onSave = async () => {
 		if (!x || !y) return;
 
-		await Backend.CreateBin(storeName, parseInt(spaceId), name, parseFloat(x), parseFloat(y));
+		const resp = await Backend.CreateBin(
+			storeName,
+			parseInt(spaceId),
+			name,
+			parseFloat(x),
+			parseFloat(y)
+		);
+		resp ? goto(`/stores/${storeName}/spaces/${spaceId}`) : console.log('error'); //todo toast
 	};
 </script>
 

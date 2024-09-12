@@ -9,12 +9,13 @@
 	import { Canvas } from '$lib/Mapper/Canvas';
 	import type { Point } from '$lib/Mapper/Geometry';
 	import { Backend } from '$lib/Util/Backend';
-	import type { Space } from '$lib/Util/Models';
+	import type { Bin, Space } from '$lib/Util/Models';
 	import { onMount, tick } from 'svelte';
 
 	const storeName = $page.params.slug;
 	const spaceId = $page.params.spaceId;
 	let space: Space;
+	let bins: Bin[] = [];
 
 	let popupManager: PopupManager;
 
@@ -28,13 +29,19 @@
 		const resp = await Backend.GetSpace(storeName, parseInt(spaceId));
 		if (resp) space = resp;
 
+		await fetchBins();
 		await tick();
 		ctx = canvas.getContext('2d');
+
 		if (ctx) {
-			Canvas.FixScaling(ctx, canvas);
-			if (space.drawing) Canvas.DrawPaths(ctx, space.drawing);
+			redraw();
 		}
 	});
+
+	const fetchBins = async () => {
+		const resp = await Backend.GetBinList(storeName, parseInt(spaceId));
+		if (resp) bins = resp;
+	};
 
 	const redraw = () => {
 		if (!ctx) return;
@@ -42,6 +49,10 @@
 		Canvas.Clear(ctx, canvas);
 		Canvas.FixScaling(ctx, canvas);
 		if (space.drawing) Canvas.DrawPaths(ctx, space.drawing);
+		for (const bin of bins) {
+			Canvas.DrawCircle(ctx, bin.location, 10, 'green');
+		}
+
 		if (tempCoord) Canvas.DrawCircle(ctx, tempCoord, 10);
 		if (selectedCoord) Canvas.DrawCircle(ctx, selectedCoord, 10);
 	};
@@ -131,10 +142,19 @@
 				{/if}
 
 				<Divider />
+
+				{#each bins as bin}
+					<h1>{bin.name}</h1>
+				{/each}
 			</div>
 
 			<div class="canvas-container">
-				<canvas bind:this={canvas} on:mousemove={handleMouseMove} on:click={handleClick} />
+				<canvas
+					bind:this={canvas}
+					on:mousemove={handleMouseMove}
+					on:resize={redraw}
+					on:click={handleClick}
+				/>
 			</div>
 		</div>
 	</div>
@@ -178,6 +198,7 @@
 		flex: 7;
 		display: flex;
 		align-items: center;
+		padding: 16px;
 	}
 	span {
 		font-family: 'Figtree';
@@ -185,5 +206,6 @@
 	canvas {
 		aspect-ratio: 4 / 3;
 		width: min(100%, 100vh * 4/ 3);
+		outline: black 1px solid;
 	}
 </style>

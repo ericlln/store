@@ -1,5 +1,5 @@
 import type { Point } from '$lib/Mapper/Geometry';
-import type { Item, Space, Store } from './Models';
+import type { Bin, Item, Space, Store } from './Models';
 import { invoke } from '@tauri-apps/api';
 
 export class Backend {
@@ -71,45 +71,32 @@ export class Backend {
 		y: number
 	): Promise<boolean> {
 		try {
-			return await invoke('create_bin', {
+			await invoke('create_bin', {
 				storeName,
 				spaceId,
 				name,
 				x,
 				y
 			});
+			return true;
 		} catch (err: unknown) {
 			console.error('Failed to create bin: ', err);
 			return false;
 		}
 	}
 
-	public static async GetDrawing(): Promise<Point[][]> {
+	public static async GetBinList(storeName: string, spaceId: number): Promise<Bin[] | null> {
 		try {
-			const coordArray: number[][][] = await invoke('send_drawing');
-
-			const paths: Point[][] = coordArray.map((path) =>
-				path.map((point) => ({ x: point[0], y: point[1] }))
-			);
-
-			return paths;
-		} catch (error) {
-			console.error('Failed to fetch shapes: ', error);
-			return [];
+			return await invoke<Bin[]>('get_bin_list', { storeName, spaceId });
+		} catch (err: unknown) {
+			console.error(`Failed to get spaces: ${err}`);
+			return null;
 		}
 	}
 
-	public static async SendDrawing(paths: Point[][]): Promise<boolean> {
-		try {
-			const shapes = paths.map((path) => path.map((point) => [point.x, point.y]));
-			await invoke('receive_drawing', { shapes });
-			return true;
-		} catch (error) {
-			console.error('Failed to send shapes: ', error);
-			return false;
-		}
-	}
-
+	//
+	//todo: unused code, here for reference for now
+	//
 	public static async FetchStore(id: number): Promise<Store | null> {
 		try {
 			return await invoke<Store>('fetch_store', { id });
