@@ -7,7 +7,7 @@
 	export let space: Space;
 
 	const handleEdit = () => {
-		goto(`/store/${storeName}/spaces/${space.id}`);
+		goto(`/stores/${storeName}/spaces/${space.id}`);
 	};
 </script>
 

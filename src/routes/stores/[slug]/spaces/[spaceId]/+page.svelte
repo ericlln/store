@@ -72,7 +72,7 @@
 		<NavHeader
 			title={`Overview of ${space.name}`}
 			onBack={() => {
-				goto(`/store/${storeName}/spaces`);
+				goto(`/stores/${storeName}/spaces`);
 			}}
 		/>
 		<div class="main-content">
@@ -116,7 +116,7 @@
 										x: selectedCoord.x.toString(),
 										y: selectedCoord.y.toString()
 									});
-									goto(`/store/${storeName}/spaces/${spaceId}/bins/creator/?${queryParams}`);
+									goto(`/stores/${storeName}/spaces/${spaceId}/bins/creator/?${queryParams}`);
 								}}
 								disabled={selectedCoord === null}
 							>

@@ -64,7 +64,7 @@
 				padding="0px 12px"
 				width="100%"
 				on:click={() => {
-					goto(`/store/${storeName}/spaces`);
+					goto(`/stores/${storeName}/spaces`);
 				}}
 			>
 				<Icon

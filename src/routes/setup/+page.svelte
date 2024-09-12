@@ -29,7 +29,7 @@
 		const resp = await Backend.CreateStore(name, path);
 		if (!resp) return; //todo toast
 
-		goto('/setup/placing');
+		goto('/stores');
 	};
 
 	const handlePathSelected = (e: CustomEvent) => {
@@ -42,7 +42,7 @@
 		title="Create store"
 		nextLabel="Save"
 		handleBack={() => {
-			goto('/dashboard');
+			goto('/');
 		}}
 		handleNext={handleSave}
 	/>

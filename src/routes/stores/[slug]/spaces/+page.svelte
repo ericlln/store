@@ -22,7 +22,7 @@
 	<NavHeader
 		title={`Spaces in ${storeName}`}
 		onBack={() => {
-			goto(`/store/${storeName}`);
+			goto(`/stores/${storeName}`);
 		}}
 	/>
 
@@ -30,7 +30,7 @@
 		<div class="spaces-list">
 			<Button
 				on:click={async () => {
-					await goto(`/store/${storeName}/spaces/creator`);
+					await goto(`/stores/${storeName}/spaces/creator`);
 				}}
 			>
 				<Icon

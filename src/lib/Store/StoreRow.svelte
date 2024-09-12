@@ -7,7 +7,7 @@
 	export let path;
 
 	const handleEdit = () => {
-		goto(`/store/${name}`);
+		goto(`/stores/${name}`);
 	};
 </script>
 

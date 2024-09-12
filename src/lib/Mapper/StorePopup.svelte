@@ -36,7 +36,7 @@
 				x: location.x.toString(),
 				y: location.y.toString()
 			});
-			goto(`/store/editor?${queryParams}`);
+			goto(`/stores/editor?${queryParams}`);
 		}}>Setup</Button
 	>
 	<Button

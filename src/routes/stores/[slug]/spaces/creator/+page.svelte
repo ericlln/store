@@ -169,13 +169,13 @@
 		title="Create Space"
 		nextLabel="Save"
 		handleBack={() => {
-			goto(`/store/${storeName}`);
+			goto(`/stores/${storeName}`);
 		}}
 		handleNext={async () => {
 			const resp = await Backend.CreateSpace(storeName, spaceName, paths);
 			if (!resp) return; //todo toast
 
-			goto(`/store/${storeName}/spaces`);
+			goto(`/stores/${storeName}/spaces`);
 		}}
 	/>
 	<div class="floating">

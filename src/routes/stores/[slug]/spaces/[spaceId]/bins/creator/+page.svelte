@@ -24,7 +24,7 @@
 	<NavHeader
 		title="New Bin"
 		onBack={() => {
-			goto(`/store/${storeName}/spaces/${spaceId}`);
+			goto(`/stores/${storeName}/spaces/${spaceId}`);
 		}}
 	/>
 	<Input width="100%" height={50} bind:value={name} placeholder="Bin name" />
