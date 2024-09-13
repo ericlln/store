@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 
+	export let maxWidth: string = '200px';
 	export let popupText: string = '';
 	export let popupDir: string = 't'; // t, b, l, r
 	export let popupPadding: number = 10;
@@ -32,7 +33,7 @@
 	});
 </script>
 
-<div bind:this={ref} class="popup">
+<div bind:this={ref} class="popup" style={`max-width: ${maxWidth}`}>
 	{popupText}
 </div>
 
@@ -44,9 +45,12 @@
 		color: white;
 		padding: 5px;
 		border-radius: 3px;
-		white-space: nowrap;
+		white-space: normal;
+		word-wrap: break-word;
+		overflow-wrap: break-word;
 		font-size: 12px;
-		z-index: 50;
+		z-index: 500;
 		pointer-events: none;
+		overflow: hidden;
 	}
 </style>

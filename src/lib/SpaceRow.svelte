@@ -11,21 +11,13 @@
 	};
 </script>
 
-<Button on:click={handleEdit} height="30px" type="space-between">
+<Button on:click={handleEdit} padding="10px" type="space-between">
 	<span>{space.name}</span>
-	<span>1</span>
+	<span>0 Bins</span>
 </Button>
 
 <style>
 	* {
 		box-sizing: border-box;
 	}
-	/* .row-container {
-		width: 100%;
-		display: flex;
-		justify-content: space-between;
-		background-color: grey;
-		padding: 8px;
-		border-radius: 4px;
-	} */
 </style>

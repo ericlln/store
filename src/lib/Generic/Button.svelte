@@ -11,6 +11,8 @@
 	export let disabled: boolean = false;
 	export let width: string = '';
 	export let height: string = '';
+	export let color: string = '';
+	export let bg: string = '#eee';
 
 	export let popupText: string = '';
 	export let popupDir: string = 't'; // t, b, l, r
@@ -41,10 +43,10 @@
 	};
 </script>
 
-<PopupManager bind:this={popupManager} onRemovePopup={(id) => {}} />
+<PopupManager bind:this={popupManager} />
 <button
 	class={`btn ${fontSize} ${type} `}
-	style={`width: ${width}; height: ${height}; padding: ${padding};`}
+	style={`width: ${width}; height: ${height}; padding: ${padding}; color: ${color}; background-color: ${bg}`}
 	{disabled}
 	on:click
 	on:mouseenter={onMouseEnter}
@@ -55,6 +57,7 @@
 
 <style>
 	.btn {
+		font-family: 'Figtree';
 		border: none;
 		cursor: pointer;
 		pointer-events: auto;

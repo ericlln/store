@@ -9,9 +9,13 @@
 </script>
 
 <div class="nav-container">
-	<Button on:click={handleBack} padding="4px" disabled={handleBack === null}>{backLabel}</Button>
+	<Button on:click={handleBack} padding="4px" bg="transparent" disabled={handleBack === null}
+		>{backLabel}</Button
+	>
 	<h1>{title}</h1>
-	<Button on:click={handleNext} padding="4px" disabled={handleNext === null}>{nextLabel}</Button>
+	<Button on:click={handleNext} padding="4px" bg="transparent" disabled={handleNext === null}
+		>{nextLabel}</Button
+	>
 </div>
 
 <style>
@@ -20,13 +24,14 @@
 	}
 	.nav-container {
 		width: 100%;
-		height: 34px;
+		height: 40px;
 		background: #eee;
+		border-bottom: 2px solid rgba(0, 0, 0, 0.2);
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		overflow: hidden;
-		padding: 0px 4px;
+		padding: 0px 8px;
 	}
 	h1 {
 		margin: 0;

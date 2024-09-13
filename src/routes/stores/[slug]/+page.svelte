@@ -45,7 +45,7 @@
 		<NavHeader
 			title="Store Overview"
 			onBack={() => {
-				goto(`/setup`); //todo for now
+				goto(`/stores`);
 			}}
 		/>
 

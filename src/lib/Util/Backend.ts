@@ -22,9 +22,9 @@ export class Backend {
 		}
 	}
 
-	public static async GetStoreList(): Promise<string[] | null> {
+	public static async GetStoreList(): Promise<Store[] | null> {
 		try {
-			return await invoke<string[]>('get_store_list');
+			return await invoke<Store[]>('get_store_list');
 		} catch (err: unknown) {
 			console.error('Failed to get store list: ', err);
 			return null;
@@ -97,25 +97,6 @@ export class Backend {
 	//
 	//todo: unused code, here for reference for now
 	//
-	public static async FetchStore(id: number): Promise<Store | null> {
-		try {
-			return await invoke<Store>('fetch_store', { id });
-		} catch (err: unknown) {
-			console.error('Failed to fetch store: ', err);
-			return null;
-		}
-	}
-
-	public static async FetchAllStores(spaceId: number): Promise<Store[]> {
-		try {
-			const resp = await invoke<Store[]>('fetch_all_stores', { spaceId });
-			return resp;
-		} catch (err: unknown) {
-			console.error(`Failed to fetch stores on space ${spaceId}: ${err}`);
-			return [];
-		}
-	}
-
 	public static async AddItem(
 		storeId: number,
 		name: string,

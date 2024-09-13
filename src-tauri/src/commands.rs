@@ -1,7 +1,7 @@
 use std::{path::{Path, PathBuf}, sync::Mutex};
 use rusqlite::{Connection, Result};
 use tauri::State;
-use crate::{config::{read_config, remember_store, retrieve_store_path, ConfigState}, db::create_tables, models::{Bin, Point, Space}};
+use crate::{config::{read_config, remember_store, retrieve_store_path, ConfigState}, db::create_tables, models::{Bin, Point, Space, Store}};
 
 #[tauri::command]
 pub fn create_store(state: State<'_, Mutex<ConfigState>>, name: &str, path: &str) -> Result<(), String> {
@@ -48,7 +48,7 @@ pub fn open_store(state: State<'_, Mutex<ConfigState>>, name: &str) -> Result<St
 }
 
 #[tauri::command]
-pub fn get_store_list(state: State<'_, Mutex<ConfigState>>) -> Result<Vec<String>, String> {
+pub fn get_store_list(state: State<'_, Mutex<ConfigState>>) -> Result<Vec<Store>, String> {
     let config_json = read_config(&state).map_err(|e| e.to_string())?;
 
     let mut store_list = Vec::new();
@@ -56,9 +56,7 @@ pub fn get_store_list(state: State<'_, Mutex<ConfigState>>) -> Result<Vec<String
     if let Some(stores) = config_json.get("stores").and_then(|v| v.as_object()) {
         for kvp in stores.iter() {
             if let Some(path) = kvp.1.as_str() {
-                if PathBuf::from(path).exists() {
-                    store_list.push(kvp.0.to_string());
-                }
+                store_list.push(Store {name: kvp.0.to_string(), path: path.to_string(), available: PathBuf::from(path).exists()});
             }
         }
     }

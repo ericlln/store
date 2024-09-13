@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import Button from '$lib/Generic/Button.svelte';
+	import Divider from '$lib/Generic/Divider.svelte';
 	import Icon from '$lib/Generic/Icon.svelte';
 	import NavHeader from '$lib/Generic/NavHeader.svelte';
 	import SpaceRow from '$lib/SpaceRow.svelte';
@@ -39,6 +40,7 @@
 					size={24}
 				/></Button
 			>
+			<Divider color="transparent" />
 			{#each spaces as space (space.id)}
 				<SpaceRow {space} {storeName} />
 			{/each}
@@ -70,6 +72,6 @@
 		gap: 6px;
 		padding: 12px;
 		background-color: lightslategray;
-		border-radius: 12px;
+		border-radius: 6px;
 	}
 </style>

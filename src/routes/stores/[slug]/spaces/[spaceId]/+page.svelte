@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import BinRow from '$lib/BinRow.svelte';
 	import Button from '$lib/Generic/Button.svelte';
 	import Divider from '$lib/Generic/Divider.svelte';
 	import Icon from '$lib/Generic/Icon.svelte';
@@ -144,7 +145,7 @@
 				<Divider />
 
 				{#each bins as bin}
-					<h1>{bin.name}</h1>
+					<BinRow {bin} />
 				{/each}
 			</div>
 
