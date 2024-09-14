@@ -56,6 +56,7 @@
 		justify-content: center;
 		align-items: center;
 		padding: 100px;
+		gap: 8px;
 	}
 	span {
 		font-family: 'Figtree';

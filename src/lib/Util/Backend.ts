@@ -94,20 +94,27 @@ export class Backend {
 		}
 	}
 
-	//
-	//todo: unused code, here for reference for now
-	//
-	public static async AddItem(
-		storeId: number,
-		name: string,
-		quantity: number,
-		notes: string
+	public static async CreateItem(
+		storeName: string,
+		spaceId: number,
+		binId: number,
+		name: string
 	): Promise<boolean> {
 		try {
-			return await invoke<boolean>('add_item', { storeId, name, quantity, notes });
+			await invoke('create_item', { storeName, spaceId, binId, name });
+			return true;
 		} catch (err: unknown) {
 			console.error('Failed to add item: ', err);
 			return false;
+		}
+	}
+
+	public static async GetItemList(storeName: string, binId: number): Promise<Item[] | null> {
+		try {
+			return await invoke<Item[]>('get_item_list', { storeName, binId });
+		} catch (err: unknown) {
+			console.error(`Failed to get items: ${err}`);
+			return null;
 		}
 	}
 

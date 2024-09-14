@@ -1,7 +1,7 @@
 use std::{path::{Path, PathBuf}, sync::Mutex};
 use rusqlite::{Connection, Result};
 use tauri::State;
-use crate::{config::{read_config, remember_store, retrieve_store_path, ConfigState}, db::create_tables, models::{Bin, Point, Space, Store}};
+use crate::{config::{read_config, remember_store, retrieve_store_path, ConfigState}, db::create_tables, models::{Bin, Item, Point, Space, Store}};
 
 #[tauri::command]
 pub fn create_store(state: State<'_, Mutex<ConfigState>>, name: &str, path: &str) -> Result<(), String> {
@@ -167,4 +167,44 @@ pub fn get_bin_list(state: State<'_, Mutex<ConfigState>>, store_name: &str, spac
     let bins: Vec<Bin> = iter.collect::<Result<Vec<Bin>>>().map_err(|e| e.to_string())?;
 
     Ok(bins)
+}
+
+#[tauri::command]
+pub fn create_item(state: State<'_, Mutex<ConfigState>>, store_name: &str, space_id: i64, bin_id: i64, name: &str) -> Result<(), String> {
+    let path = retrieve_store_path(&state, store_name)?;
+    let conn = Connection::open(path).map_err(|e| e.to_string())?;
+
+    conn.execute(
+        "INSERT INTO items (space_id, bin_id, name) VALUES (?1, ?2, ?3)",
+        (space_id, bin_id, name)
+    ).map_err(|e| e.to_string())?;
+
+    Ok(())
+}
+
+#[tauri::command]
+pub fn get_item_list(state: State<'_, Mutex<ConfigState>>, store_name: &str, bin_id: i64) -> Result<Vec<Item>, String> {
+    let path = retrieve_store_path(&state, store_name)?;
+    let conn = Connection::open(path).map_err(|e| e.to_string())?;
+
+    let mut stmt = conn.prepare(
+        "SELECT id, space_id, bin_id, name, quantity, notes
+        FROM items
+        WHERE bin_id = ?1"
+    ).map_err(|e| e.to_string())?;
+
+    let iter = stmt.query_map([bin_id], |row| {
+        let id: i64 = row.get(0)?;
+        let space_id: i64 = row.get(1)?;
+        let bin_id: i64 = row.get(2)?;
+        let name: String = row.get(3)?;
+        let quantity: Option<i32> = row.get(4)?;
+        let notes: Option<String> = row.get(5)?;
+
+        Ok(Item { id, space_id, bin_id, name, quantity, notes })
+    }).map_err(|e| e.to_string())?;
+
+    let items: Vec<Item> = iter.collect::<Result<Vec<Item>>>().map_err(|e| e.to_string())?;
+
+    Ok(items)
 }

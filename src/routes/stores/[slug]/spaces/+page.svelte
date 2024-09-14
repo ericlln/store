@@ -30,8 +30,8 @@
 	{#if spaces}
 		<div class="spaces-list">
 			<Button
-				on:click={async () => {
-					await goto(`/stores/${storeName}/spaces/creator`);
+				on:click={() => {
+					goto(`/stores/${storeName}/spaces/creator`);
 				}}
 			>
 				<Icon

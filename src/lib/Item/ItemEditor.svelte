@@ -10,7 +10,7 @@
 	let location = '';
 
 	const addItem = async () => {
-		await Backend.AddItem(1, itemName, parseInt(quantity), notes);
+		await Backend.CreateItem(1, itemName, parseInt(quantity), notes);
 	};
 </script>
 

@@ -24,9 +24,10 @@ pub fn create_tables(conn: &Connection) -> Result<(), rusqlite::Error> {
         bin_id INTEGER,
         name TEXT NOT NULL,
         quantity INTEGER,
+        notes TEXT,
 
         FOREIGN KEY (space_id) REFERENCES spaces(id) ON DELETE SET NULL,
-        FOREIGN KEY (bin_id) REFERENCES bind(id) ON DELETE SET NULL
+        FOREIGN KEY (bin_id) REFERENCES bins(id) ON DELETE SET NULL
     )";
 
     conn.execute_batch(query)?;

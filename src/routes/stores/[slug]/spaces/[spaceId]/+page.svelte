@@ -145,7 +145,7 @@
 				<Divider />
 
 				{#each bins as bin}
-					<BinRow {bin} />
+					<BinRow {bin} {storeName} />
 				{/each}
 			</div>
 

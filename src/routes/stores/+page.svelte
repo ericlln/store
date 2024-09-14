@@ -17,11 +17,15 @@
 	let stores: Store[] = [];
 
 	onMount(async () => {
+		await fetch();
+	});
+
+	const fetch = async () => {
 		const list = await Backend.GetStoreList();
 		if (list) {
 			stores = list;
 		}
-	});
+	};
 
 	const handleSave = async () => {
 		if (name === '' || path === '') {
@@ -32,7 +36,7 @@
 		const resp = await Backend.CreateStore(name, path);
 		if (!resp) return; //todo toast
 
-		goto('/stores');
+		await fetch();
 	};
 
 	const handlePathSelected = (e: CustomEvent) => {
