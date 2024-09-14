@@ -8,6 +8,9 @@
 	import type { GridOptions, ColDef, GetRowIdParams, GridApi } from 'ag-grid-community';
 	import { onMount } from 'svelte';
 
+	import 'ag-grid-community/styles/ag-grid.css';
+	import 'ag-grid-community/styles/ag-theme-alpine.css';
+
 	const storeName = $page.params.slug;
 	const spaceId = $page.params.spaceId;
 	const binId = $page.params.binId;
@@ -65,17 +68,6 @@
 		/>
 	</div>
 </div>
-
-<svelte:head>
-	<link
-		rel="stylesheet"
-		href="https://cdn.jsdelivr.net/npm/ag-grid-community@29.0.0/styles/ag-grid.css"
-	/>
-	<link
-		rel="stylesheet"
-		href="https://cdn.jsdelivr.net/npm/ag-grid-community@29.0.0/styles/ag-theme-alpine.css"
-	/>
-</svelte:head>
 
 <style>
 	.layout-wrapper {
