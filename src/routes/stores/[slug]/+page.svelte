@@ -79,7 +79,9 @@
 			type="space-between"
 			padding="0px 12px"
 			width="100%"
-			on:click={async () => {}}
+			on:click={() => {
+				goto(`/stores/${storeName}/bins`);
+			}}
 		>
 			<Icon
 				viewBox="0 -960 960 960"
@@ -94,7 +96,9 @@
 			type="space-between"
 			padding="0px 12px"
 			width="100%"
-			on:click={async () => {}}
+			on:click={() => {
+				goto(`/stores/${storeName}/items`);
+			}}
 		>
 			<Icon
 				viewBox="0 -960 960 960"

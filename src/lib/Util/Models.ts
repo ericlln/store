@@ -21,9 +21,11 @@ export interface Bin {
 
 export interface Item {
 	id: number;
+	name: string;
 	binId: number;
 	spaceId: number;
-	name: string;
+	binName: string;
+	spaceName: string;
 	quantity?: number;
 	notes?: string;
 }

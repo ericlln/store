@@ -21,12 +21,14 @@
 
 	const columnDefs: ColDef<Item>[] = [
 		{ field: 'name', filter: 'agTextColumnFilter' },
+		{ field: 'spaceName', filter: 'agTextColumnFilter' },
+		{ field: 'binName', filter: 'agTextColumnFilter' },
 		{ field: 'quantity', filter: 'agNumberColumnFilter' },
 		{ field: 'notes' }
 	];
 
 	onMount(async () => {
-		const resp = await Backend.GetItemList(storeName, parseInt(binId));
+		const resp = await Backend.GetItemList(storeName, null);
 
 		if (resp) {
 			items = resp;
@@ -49,9 +51,9 @@
 
 <div class="layout-wrapper">
 	<NavHeader
-		title={`Items in Bin`}
+		title={`All Items`}
 		onBack={() => {
-			goto(`/stores/${storeName}/spaces/${spaceId}/`);
+			goto(`/stores/${storeName}`);
 		}}
 	/>
 

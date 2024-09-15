@@ -109,7 +109,7 @@ export class Backend {
 		}
 	}
 
-	public static async GetItemList(storeName: string, binId: number): Promise<Item[] | null> {
+	public static async GetItemList(storeName: string, binId: number | null): Promise<Item[] | null> {
 		try {
 			return await invoke<Item[]>('get_item_list', { storeName, binId });
 		} catch (err: unknown) {

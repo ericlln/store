@@ -32,11 +32,15 @@ pub struct Bin {
 #[derive(Serialize)]
 pub struct Item {
     pub id: i64,
+    pub name: String,
     #[serde(rename = "spaceId")]
     pub space_id: i64,
+    #[serde(rename = "spaceName")]
+    pub space_name: Option<String>,
     #[serde(rename = "binId")]
     pub bin_id: i64,
-    pub name: String,
+    #[serde(rename = "binName")]
+    pub bin_name: Option<String>,
     pub quantity: Option<i32>,
     pub notes: Option<String>
 }

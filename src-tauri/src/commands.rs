@@ -1,5 +1,5 @@
 use std::{path::{Path, PathBuf}, sync::Mutex};
-use rusqlite::{Connection, Result};
+use rusqlite::{Connection, Params, Result};
 use tauri::State;
 use crate::{config::{read_config, remember_store, retrieve_store_path, ConfigState}, db::create_tables, models::{Bin, Item, Point, Space, Store}};
 
@@ -183,25 +183,41 @@ pub fn create_item(state: State<'_, Mutex<ConfigState>>, store_name: &str, space
 }
 
 #[tauri::command]
-pub fn get_item_list(state: State<'_, Mutex<ConfigState>>, store_name: &str, bin_id: i64) -> Result<Vec<Item>, String> {
+pub fn get_item_list(state: State<'_, Mutex<ConfigState>>, store_name: &str, bin_id: Option<i64>) -> Result<Vec<Item>, String> {
     let path = retrieve_store_path(&state, store_name)?;
     let conn = Connection::open(path).map_err(|e| e.to_string())?;
 
-    let mut stmt = conn.prepare(
-        "SELECT id, space_id, bin_id, name, quantity, notes
-        FROM items
+    let sql = if bin_id.is_some() {
+        "SELECT i.id, i.space_id, bin_id, i.name, quantity, notes, b.name, s.name
+        FROM items as i
+        LEFT JOIN bins as b ON i.bin_id = b.id 
+        LEFT JOIN spaces as s ON i.space_id = s.id
         WHERE bin_id = ?1"
-    ).map_err(|e| e.to_string())?;
+    } else {
+        "SELECT i.id, i.space_id, bin_id, i.name, quantity, notes, b.name, s.name
+        FROM items as i
+        LEFT JOIN bins as b ON i.bin_id = b.id 
+        LEFT JOIN spaces as s ON i.space_id = s.id"
+    };
 
-    let iter = stmt.query_map([bin_id], |row| {
+    let mut stmt = conn.prepare(sql).map_err(|e| e.to_string())?;
+
+    let params: &[&(dyn rusqlite::ToSql)] = match bin_id {
+        Some(ref bin_id_value) => &[bin_id_value as &(dyn rusqlite::ToSql)],
+        None => &[],
+    };
+
+    let iter = stmt.query_map(params, |row| {
         let id: i64 = row.get(0)?;
         let space_id: i64 = row.get(1)?;
         let bin_id: i64 = row.get(2)?;
         let name: String = row.get(3)?;
         let quantity: Option<i32> = row.get(4)?;
         let notes: Option<String> = row.get(5)?;
+        let bin_name: Option<String> = row.get(6)?;
+        let space_name: Option<String> = row.get(7)?;
 
-        Ok(Item { id, space_id, bin_id, name, quantity, notes })
+        Ok(Item { id, space_id, bin_id, name, quantity, notes, space_name, bin_name })
     }).map_err(|e| e.to_string())?;
 
     let items: Vec<Item> = iter.collect::<Result<Vec<Item>>>().map_err(|e| e.to_string())?;
